@@ -28,7 +28,7 @@ Blog post: ["Goodbye SQLite (for logs)"](https://www.vibekanban.com/blog/goodbye
 
 - Branch naming: `vk/<4-char-id>-<task-slug>` (configurable prefix in settings). Structurally the same shape as Vastask's already-locked `vastask/task-<issue-number>-<short-id>` — good corroboration that this pattern is proven, not just theorized.
 - **Orphan cleanup**: on startup, VK removes worktree directories that have no matching workspace record in the database (handles the case where the app crashed mid-deletion, leaving a dangling directory).
-- **Expired cleanup**: a worktree tied to a task that's moved to Done/archived gets cleaned up after a 1-hour grace interval. Deleting a task removes its worktree immediately.
+- **Expired cleanup**: eligibility is keyed on the *workspace*, not the task's board status — the trigger is inactivity (the newer of the workspace's last update and its latest execution's completion time) older than a threshold, and archived-ness only picks which threshold applies: 1 hour if the workspace is archived, 72 hours otherwise. Workspaces with any execution still missing a completion time are excluded outright. Deleting a task removes its worktree immediately, bypassing this path entirely. (Verified directly against `crates/db/src/models/workspace.rs` on their `main` branch — unlike Finding 1 above, not just search snippets.)
 - Cleanup is fully disableable via an env var, kept as an explicit debugging escape hatch.
 - Rough edges visible in their public issue tracker even after this shipped (titles only, not read in full): a run/`ExecutionProcess` can stay stuck "running" after its worktree has already gone missing (a "ghost run" with no further logs), and worktrees have shipped bugs where they weren't cleaned up after a merge. Both read as reconciliation gaps between DB state and on-disk state, not fundamental design flaws.
 
@@ -53,7 +53,7 @@ Vastask is a single local process by design (no cloud component). This session r
 
 - [ ] `gh auth status` succeeds, and `gh issue list` works against the target repo.
 - [ ] `ANTHROPIC_API_KEY` is set in that shell's environment, on a dedicated key (not shared with other tools) so per-run cost tracking starts clean — no `--bare`.
-- [ ] `claude -p "hello" --output-format stream-json` runs successfully, standalone, before Phase 1 tries to combine it with `gh`.
+- [ ] `claude -p "hello" --output-format stream-json --verbose` runs successfully, standalone, before Phase 1 tries to combine it with `gh`. (`--verbose` is required — Claude Code rejects `--output-format stream-json` without it when paired with `-p`. The full dispatch invocation contract, with `--include-partial-messages` too, is locked in `AGENTS.md`; this is just the minimal smoke test.)
 
 ## Spike target repo — decided: `shazzar00ni/vast-task` (this repo)
 
