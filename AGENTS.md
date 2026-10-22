@@ -4,7 +4,7 @@ This file provides guidance to AI coding agents (Claude Code, Codex, and others)
 
 ## Project status: pre-implementation
 
-This repository has no application code yet. It currently contains only project-tracking artifacts: `README.md`, `LICENSE`, `CLAUDE.md`, `AGENTS.md`, and `docs/github-issues-index.md`. All planning and task breakdown lives in GitHub Issues (#1–#34), organized by roadmap phase — read `docs/github-issues-index.md` for the full phase → issue mapping before starting any work, and read the specific issue(s) for the phase you're touching before writing code. Don't assume acceptance criteria from one phase apply to another.
+This repository has no application code yet. It currently contains only project-tracking artifacts: `README.md`, `LICENSE`, `CLAUDE.md`, `AGENTS.md`, `docs/github-issues-index.md`, and `docs/phase-0-prep-notes.md`. All planning and task breakdown lives in GitHub Issues (#1–#34), organized by roadmap phase — read `docs/github-issues-index.md` for the full phase → issue mapping before starting any work, and read the specific issue(s) for the phase you're touching before writing code. Don't assume acceptance criteria from one phase apply to another.
 
 Vastask (the product these issues describe) is a **personal, single-user tool**, not a hosted product: one person, one machine, no accounts, no multi-tenancy, no cloud. It syncs GitHub issues onto a local board, hands one to Claude Code on request, runs it in an isolated git worktree, and holds the result at a pull request until the user approves it.
 
